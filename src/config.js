@@ -1,10 +1,10 @@
 import Head from 'next/head'
 
-const title = 'React Three Next Starter'
-const url = 'https://react-three-next.vercel.app/'
+const title = 'tessellator'
+const url = 'https://localhost:3000/'
 const description =
-  'The easiest and fastest way to create a 3D website using React Three Fiber and NextJS'
-const author = 'Author'
+  'A | free to use | real-time | 3-D | Spotify music visualizer'
+const author = 'njm222'
 
 const Header = () => {
   return (
@@ -60,6 +60,11 @@ const Header = () => {
           href='/icons/safari-pinned-tab.svg'
         />
         <link rel='apple-touch-startup-image' href='/startup.png' />
+        <link rel='preconnect' href='https://fonts.gstatic.com' />
+        <link
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/css2?family=Tomorrow:wght@100&display=swap'
+        />
 
         {/* Meta Tags for HTML pages on Mobile */}
         {/* <meta name="format-detection" content="telephone=yes"/>
