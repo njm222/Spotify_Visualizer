@@ -1,12 +1,12 @@
 import Head from 'next/head'
 
-const title = 'tessellator'
-const url = 'https://localhost:3000/'
+const titleDefault = 'Tessellator'
+const url = 'http://localhost:3000'
 const description =
   'A | free to use | real-time | 3-D | Spotify music visualizer'
 const author = 'njm222'
 
-const Header = () => {
+const Header = ({ title = titleDefault }) => {
   return (
     <>
       <Head>
@@ -23,7 +23,7 @@ const Header = () => {
         <meta name='description' content={description} />
         <meta
           name='keywords'
-          content='Software Engineer,Product Manager,Project Manager,Data Scientist,Computer Scientist'
+          content='Music Visualizer,Audio Visualizer,Spotify Visualizer,r3f,three.js'
         />
         <meta name='robots' content='index,follow' />
         <meta name='distribution' content='web' />
@@ -60,11 +60,6 @@ const Header = () => {
           href='/icons/safari-pinned-tab.svg'
         />
         <link rel='apple-touch-startup-image' href='/startup.png' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' />
-        <link
-          rel='stylesheet'
-          href='https://fonts.googleapis.com/css2?family=Tomorrow:wght@100&display=swap'
-        />
 
         {/* Meta Tags for HTML pages on Mobile */}
         {/* <meta name="format-detection" content="telephone=yes"/>

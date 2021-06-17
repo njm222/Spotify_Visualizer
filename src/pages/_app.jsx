@@ -1,54 +1,61 @@
 import { useRouter } from 'next/router'
 import useStore from '@/helpers/store'
-import { useEffect, Children } from 'react'
+import { useEffect, Children, Component } from 'react'
 import Header from '../config'
 import dynamic from 'next/dynamic'
-import Dom from '@/components/layout/_dom'
+import Dom from '@/components/layout/dom'
 
 import '@/styles/index.css'
 
 let LCanvas = null
 if (process.env.NODE_ENV === 'production') {
-  LCanvas = dynamic(() => import('@/components/layout/_canvas'), {
+  LCanvas = dynamic(() => import('@/components/layout/canvas'), {
     ssr: false,
   })
 } else {
-  LCanvas = require('@/components/layout/_canvas').default
+  LCanvas = require('@/components/layout/canvas').default
 }
 
 function Layout({ dom }) {
-  return (
-    <>
-      <Header />
-      {dom && <Dom>{dom}</Dom>}
-    </>
-  )
+  return <>{dom && <Dom>{dom}</Dom>}</>
 }
 
-function MyApp({ Component, pageProps }) {
-  const router = useRouter()
-
+const ForwardPropsToR3fComponent = ({ comp, pageProps }) => {
   let r3fArr = []
   let compArr = []
 
-  Children.forEach(Component(pageProps).props.children, (child) => {
-    if (child.props && child.props.r3f) {
-      r3fArr.push(child)
-    } else {
-      compArr.push(child)
-    }
-  })
+  try {
+    Children.forEach(comp(pageProps).props.children, (child) => {
+      if (child?.props && child.props.r3f) {
+        r3fArr.push(child)
+      } else {
+        compArr.push(child)
+      }
+    })
 
+    return (
+      <>
+        {compArr && <Layout dom={compArr} />}
+        {r3fArr && <LCanvas>{r3fArr}</LCanvas>}
+      </>
+    )
+  } catch (error) {
+    // fallback security for SSG
+    return <comp {...pageProps} />
+  }
+}
+
+function App({ Component, pageProps = {} }) {
+  const router = useRouter()
   useEffect(() => {
     useStore.setState({ router })
   }, [router])
-
   return (
     <>
-      {compArr && <Layout dom={compArr} />}
-      {r3fArr && <LCanvas>{r3fArr}</LCanvas>}
+      <Header title={pageProps.title} />
+      <ForwardPropsToR3fComponent comp={Component} pageProps={pageProps} />
     </>
   )
 }
 
-export default MyApp
+export default App

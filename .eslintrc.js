@@ -1,12 +1,12 @@
 // @js-ignore
 module.exports = {
   extends: [
+    'next',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'react-app',
     'prettier',
-    'plugin:tailwind/recommended',
     'plugin:react-hooks/recommended',
   ],
   rules: {
