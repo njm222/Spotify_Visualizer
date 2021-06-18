@@ -14,7 +14,7 @@ body,
   top: 0;
   left: 0;
   width: 100%;
-  /* height: 100vh; */
+  height: 100vh;
   overflow: hidden;
   z-index: 10;
 }
@@ -22,7 +22,7 @@ body,
 .welcomeContainer {
   width: max-content;
   margin: auto;
-  padding: 2em;
+  padding: 1em;
   color: #000;
 }
 
@@ -62,4 +62,29 @@ body,
   50% {
     border-color: transparent;
   }
+}
+
+
+/* ---------- Playlists ---------- */
+
+.myPlaylists {
+  display: flex;
+  position: fixed;
+  padding: 1em;
+  bottom: 0;
+}
+
+.playlist {
+  width: 150px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 1em;
+}
+
+.playlist img {
+  max-width: 100%;
+  height: auto;
 }

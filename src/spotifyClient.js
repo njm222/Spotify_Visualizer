@@ -10,3 +10,8 @@ export const getMyInfo = async () => {
   const results = await spotifyClient.getMe()
   return results
 }
+
+export const getUserPlaylists = async (userId) => {
+  const results = await spotifyClient.getUserPlaylists(userId)
+  return results
+}

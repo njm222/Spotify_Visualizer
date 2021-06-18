@@ -14,6 +14,10 @@ const VisualizerPreview = dynamic(
   }
 )
 
+const Playlists = dynamic(() => import('@/components/dom/Playlists'), {
+  ssr: false,
+})
+
 const Page = () => {
   const set = useStore((state) => state.set)
 
@@ -31,6 +35,7 @@ const Page = () => {
   return (
     <>
       <WelcomeUser />
+      <Playlists />
       <VisualizerPreview r3f />
     </>
   )
