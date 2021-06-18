@@ -11,9 +11,26 @@ export default function WelcomeUser() {
     })()
   }, [set])
 
+  useEffect(() => {
+    const parent = document.querySelector('.welcomeContainer > .typewriterText');
+    Array.from(parent.children).forEach((child, i) => {
+      child.style.setProperty('--n', i)
+    })
+  }, [])
+
   return (
     <div className='welcomeContainer'>
-      <p>Hello {user?.display_name}</p>
+      <div className='typewriterText'>
+        <p>
+          hello {user?.display_name},
+        </p>
+        <p>
+          welcome to tessellator... a spotify music visualizer
+        </p>
+        <p>
+          jump [scroll] into the portal below &#x2B07; to see it in action 
+        </p>
+      </div>
     </div>
   )
 }

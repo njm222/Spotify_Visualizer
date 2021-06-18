@@ -20,9 +20,10 @@ const VisualizerPreview = () => {
       <Lights />
       <Suspense fallback={null}>
         <Portal>
-          <mesh>
+          <Lights />
+          <mesh rotation={[Math.PI / 3, Math.PI / 3, 0]}>
             <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial color={'hotpink'} />
+            <meshStandardMaterial color={'hotpink'} />
           </mesh>
         </Portal>
         <mesh position={[-1, -1, 2]}>

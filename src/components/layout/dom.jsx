@@ -6,7 +6,7 @@ const Dom = ({ children }) => {
   useStore.setState({ dom: ref })
   return (
     <div
-      className='domContainer'
+      className='domContainer dom'
       ref={ref}
     >
       {children}

@@ -30,6 +30,7 @@ const LandingScene = () => {
     document.documentElement.style.cursor = value ? 'pointer' : 'unset'
   }
 
+
   return (
     <Suspense fallback={null}>
       <ambientLight intensity={0.8} />
@@ -45,7 +46,7 @@ const LandingScene = () => {
         fade
       />
       <Text
-        onClick={() => setClicked(true)}
+        onPointerDown={() => setClicked(true)}
         onPointerEnter={() => setPointer(true)}
         onPointerLeave={() => setPointer(false)}
       >
