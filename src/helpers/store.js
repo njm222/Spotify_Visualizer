@@ -5,7 +5,12 @@ const useStore = create((set) => {
     set,
     router: {},
     dom: null,
+    accessToken: null,
+    refreshToken: null,
     isVisualizer: false,
+    player: {
+      lastPlayed: null,
+    },
   }
 })
 

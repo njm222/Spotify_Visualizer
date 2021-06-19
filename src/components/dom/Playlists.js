@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import useStore from '@/helpers/store'
 import { getUserPlaylists } from '@/spotifyClient'
 
 export default function Playlists() {
@@ -7,14 +6,10 @@ export default function Playlists() {
 
   useEffect(() => {
     ;(async () => {
-      // set({ user: await getMyInfo() })
       const playlists = await getUserPlaylists()
-      console.log(playlists)
       setMyPlaylists(playlists.items)
     })()
   }, [setMyPlaylists])
-
-  console.log(myPlaylists)
 
   return (
     <div className='myPlaylists'>

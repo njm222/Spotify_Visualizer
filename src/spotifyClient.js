@@ -1,4 +1,5 @@
 import SpotifyWebApi from 'spotify-web-api-js'
+import useStore from '@/helpers/store'
 
 const spotifyClient = new SpotifyWebApi()
 
@@ -15,6 +16,20 @@ export const getUserPlaylists = async (userId) => {
   const results = await spotifyClient.getUserPlaylists(userId)
   return results
 }
+
+export const getPlayerTrack = () => {}
+
+export const getTrackAnalysis = async (trackId) => {
+  const results = await spotifyClient.getAudioAnalysisForTrack(trackId)
+  return results
+}
+
+export const getTrackFeatures = async (trackId) => {
+  const results = await spotifyClient.getAudioFeaturesForTrack(trackId)
+  return results
+}
+
+/* -------- PLAYER -------- */
 
 export const sdkInit = () => {
   window.onSpotifyWebPlaybackSDKReady = () => {
@@ -44,7 +59,7 @@ const addPlayerListeners = (player) => {
   })
   player.addListener('playback_error', (data) => {
     console.log('playback_error')
-    console.log(data)
+    console.log(data) // TODO: change these to toast messages
   })
   player.addListener('ready', (data) => {
     console.log('Ready with deviceID ', data.device_id)
@@ -54,16 +69,24 @@ const addPlayerListeners = (player) => {
         position_ms: 0,
       })
     })
-    // this.$store.commit('mutateDeviceID', data.device_id)
-    // this.playRandomTrack(data.device_id)
-    // this.switchPlayer(data.device_id)
   })
-  player.addListener('player_state_changed', (data) => {
+  player.addListener('player_state_changed', async (data) => {
     console.log('player state changed')
-    console.log(data)
-    // this.$store.commit('mutatePlayerInfo', data)
-    // if (data && data.track_window.current_track.id !== this.prevTrackID) {
-    //   this.getPlayerTrack()
-    // }
+    const trackId = data?.track_window.current_track.id
+    if (trackId !== useStore.getState().player.lastPlayed) {
+      const analysis = await getTrackAnalysis(trackId)
+      const features = await getTrackFeatures(trackId)
+
+      useStore.setState({
+        player: {
+          lastPlayed: trackId,
+          analysis,
+          features,
+        },
+      })
+
+      // send trackId and artistsId to firestore
+      // send trackId as lastPlayed under /users/{uid} (should this be there for this release?)
+    }
   })
 }
