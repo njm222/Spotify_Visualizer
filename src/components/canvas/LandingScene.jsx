@@ -30,7 +30,6 @@ const LandingScene = () => {
     document.documentElement.style.cursor = value ? 'pointer' : 'unset'
   }
 
-
   return (
     <Suspense fallback={null}>
       <ambientLight intensity={0.8} />

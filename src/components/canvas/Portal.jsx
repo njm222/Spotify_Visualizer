@@ -5,7 +5,10 @@ import { useFBO, PerspectiveCamera } from '@react-three/drei'
 import useStore from '@/helpers/store'
 
 function Portal({ children, ...props }) {
-  const [set, isVisualizer] = useStore((state) => [state.set, state.isVisualizer])
+  const [set, isVisualizer] = useStore((state) => [
+    state.set,
+    state.isVisualizer,
+  ])
   const time = useRef(0)
   const mesh = useRef()
   const cam = useRef()
@@ -16,7 +19,9 @@ function Portal({ children, ...props }) {
   const [scene] = useState(() => new THREE.Scene())
   // Tie this component into the render-loop
   useFrame((state) => {
-    if (isVisualizer) { return }
+    if (isVisualizer) {
+      return
+    }
     if (state.camera.position.distanceTo(mesh.current.position) < 2) {
       console.log('switching cams')
       if (!portalCam) {
@@ -37,9 +42,13 @@ function Portal({ children, ...props }) {
         cam.current.updateMatrixWorld()
       }
     }
-    if(portalCam && !isVisualizer) {
+    if (portalCam && !isVisualizer) {
       if (time.current < 100) {
-        state.camera.fov = 50 + 10 * Math.sin((8 * Math.PI * time.current) / 100) * (1 - time.current / 100)
+        state.camera.fov =
+          50 +
+          10 *
+            Math.sin((8 * Math.PI * time.current) / 100) *
+            (1 - time.current / 100)
         // state.camera.position.lerp(cam.current.position, 0.05)
         state.camera.updateProjectionMatrix()
         state.camera.updateMatrixWorld()
@@ -47,7 +56,7 @@ function Portal({ children, ...props }) {
       } else {
         // switch out of portal
         console.log('cams have been switched')
-        set({isVisualizer: true})
+        set({ isVisualizer: true })
       }
     }
     // Our portal has its own camera, but we copy the originals world matrix
@@ -60,11 +69,10 @@ function Portal({ children, ...props }) {
     state.gl.setRenderTarget(null)
   })
 
-
-  return (
-    isVisualizer 
-    ? children
-    : <>
+  return isVisualizer ? (
+    children
+  ) : (
+    <>
       <mesh ref={mesh} {...props}>
         <planeGeometry args={[2.5, 5]} />
         {/* The "mirror" is just a boring plane, but it receives the buffer texture */}

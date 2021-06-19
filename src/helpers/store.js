@@ -5,7 +5,7 @@ const useStore = create((set) => {
     set,
     router: {},
     dom: null,
-    isVisualizer: false
+    isVisualizer: false,
   }
 })
 
