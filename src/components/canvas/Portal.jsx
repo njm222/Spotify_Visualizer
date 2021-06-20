@@ -56,11 +56,12 @@ function Portal({ children, ...props }) {
       } else {
         // switch out of portal
         console.log('cams have been switched')
-        set({ isVisualizer: true })
+        set({ isVisualizer: true, orbitControls: false })
+        return
       }
     }
     // Our portal has its own camera, but we copy the originals world matrix
-    cam.current.matrixWorldInverse.copy(state.camera.matrixWorldInverse)
+    cam.current?.matrixWorldInverse.copy(state.camera.matrixWorldInverse)
     // Then we set the render-target to the buffer that we have created
     state.gl.setRenderTarget(fbo)
     // We render the scene into it, using the local camera that is clamped to the planes aspect ratio

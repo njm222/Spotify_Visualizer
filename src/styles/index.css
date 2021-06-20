@@ -9,6 +9,11 @@ body,
   overflow: hidden;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 .domContainer { 
   position: absolute;
   top: 0;
@@ -17,6 +22,10 @@ body,
   height: 100vh;
   overflow: hidden;
   z-index: 10;
+}
+
+.orbitControls {
+  pointer-events: none;
 }
 
 .welcomeContainer {
@@ -91,14 +100,63 @@ body,
 
 /* ---------- Player ---------- */
 
-.player-container {
+.playerContainer {
   z-index: 1;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   position: fixed;
   bottom: 0;
   width: 100%;
   background: #292929;
   transition: all 0.5s;
   opacity: 0.7;
+}
+
+.playerContainer .playerLeft {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1em;
+  min-width: 180px;
+  width: 20%;
+}
+
+.playerContainer .trackInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #FFF
+}
+
+.playerContainer .playerCenter {
+  max-width: 722px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.playerContainer .playerControls {
+  display: flex;
+  justify-content: space-around
+}
+
+/** Progress **/
+
+.progress {
+  border: 1px solid #212131;
+  background-color: #212131;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress__bar {
+  background-color: green;
+  height: 4px;
+}
+
+.playerContainer .playerRight {
+  min-width: 180px;
+  width: 20%;
 }

@@ -1,11 +1,19 @@
 import useStore from '@/helpers/store'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 
 const Dom = ({ children }) => {
   const ref = useRef(null)
-  useStore.setState({ dom: ref })
+  const orbitControls = useStore((state) => state.orbitControls)
+
+  useEffect(() => {
+    useStore.setState({ dom: ref })
+  }, [])
+
   return (
-    <div className='domContainer dom' ref={ref}>
+    <div
+      className={`domContainer ${orbitControls ? 'orbitControls' : ''}`}
+      ref={ref}
+    >
       {children}
     </div>
   )

@@ -63,15 +63,11 @@ const addPlayerListeners = (player) => {
   })
   player.addListener('ready', (data) => {
     console.log('Ready with deviceID ', data.device_id)
-    spotifyClient.transferMyPlayback([data.device_id]).then(() => {
-      spotifyClient.play({
-        device_id: data.device_id,
-        position_ms: 0,
-      })
-    })
+    spotifyClient.play({ device_id: data.device_id })
   })
   player.addListener('player_state_changed', async (data) => {
     console.log('player state changed')
+    const playerState = data
     const trackId = data?.track_window.current_track.id
     if (trackId !== useStore.getState().player.lastPlayed) {
       const analysis = await getTrackAnalysis(trackId)
@@ -79,14 +75,21 @@ const addPlayerListeners = (player) => {
 
       useStore.setState({
         player: {
+          playerState,
           lastPlayed: trackId,
           analysis,
           features,
         },
       })
-
       // send trackId and artistsId to firestore
       // send trackId as lastPlayed under /users/{uid} (should this be there for this release?)
+      return
     }
+    useStore.setState({
+      player: {
+        ...useStore.getState().player,
+        playerState,
+      },
+    })
   })
 }
