@@ -75,39 +75,44 @@ if (process.env.EXPORT !== 'true') {
   }
 }
 
-module.exports = plugins(
-  [
+module.exports = {
+  ...plugins(
     [
-      withOffline,
-      {
-        workboxOpts: {
-          swDest: process.env.NEXT_EXPORT
-            ? 'service-worker.js'
-            : 'static/service-worker.js',
-          runtimeCaching: [
-            {
-              urlPattern: /^https?.*/,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'offlineCache',
-                expiration: {
-                  maxEntries: 200,
+      [
+        withOffline,
+        {
+          workboxOpts: {
+            swDest: process.env.NEXT_EXPORT
+              ? 'service-worker.js'
+              : 'static/service-worker.js',
+            runtimeCaching: [
+              {
+                urlPattern: /^https?.*/,
+                handler: 'NetworkFirst',
+                options: {
+                  cacheName: 'offlineCache',
+                  expiration: {
+                    maxEntries: 200,
+                  },
                 },
               },
-            },
-          ],
+            ],
+          },
+          async rewrites() {
+            return [
+              {
+                source: '/service-worker.js',
+                destination: '/_next/static/service-worker.js',
+              },
+            ]
+          },
         },
-        async rewrites() {
-          return [
-            {
-              source: '/service-worker.js',
-              destination: '/_next/static/service-worker.js',
-            },
-          ]
-        },
-      },
+      ],
+      withBundleAnalyzer,
     ],
-    withBundleAnalyzer,
-  ],
-  nextConfig
-)
+    nextConfig
+  ),
+  images: {
+    domains: ['i.scdn.co'],
+  },
+}
