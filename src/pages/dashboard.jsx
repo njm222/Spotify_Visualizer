@@ -23,10 +23,13 @@ const Player = dynamic(() => import('@/components/dom/Player'), {
 })
 
 const Page = () => {
-  const set = useStore((state) => state.set)
+  const [set, isVisualizer] = useStore((state) => [
+    state.set,
+    state.isVisualizer,
+  ])
 
   useEffect(() => {
-    set({ title: 'Dashboard' })
+    set({ title: 'Dashboard', orbitControls: true })
     // get and store tokens from query string
     const searchParams = new URLSearchParams(window.location.search)
     setAccessToken(searchParams.get('access_token'))
@@ -38,8 +41,12 @@ const Page = () => {
 
   return (
     <>
-      <WelcomeUser />
-      {/* <Playlists /> */}
+      {!isVisualizer && (
+        <>
+          <WelcomeUser />
+          {/* <Playlists /> */}
+        </>
+      )}
       <Player />
       <VisualizerPreview r3f />
     </>
