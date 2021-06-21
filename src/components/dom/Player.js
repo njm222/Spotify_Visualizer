@@ -8,8 +8,8 @@ export default function Player() {
     state.set,
     state.player.playerState,
   ])
-  console.log(playerState)
-  const timerRef = useRef()
+
+  const timerRef = useRef(null)
   const delay = useRef(0)
 
   useEffect(() => {
@@ -23,29 +23,30 @@ export default function Player() {
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (!playerState) {
-  //     return
-  //   }
+  useEffect(() => {
+    if (!playerState) {
+      return
+    }
 
-  //   if (playerState?.paused) {
-  //     // clear timeout
-  //     clearInterval(timerRef)
-  //     return
-  //   }
+    if (playerState?.paused) {
+      // clear timeout
+      clearTimeout(timerRef)
+      return
+    }
 
-  //   timerRef.current = setInterval(() => {
-  //     delay.current = new Date().getTime() - delay.current
-  //     set({
-  //       player: {
-  //         playerState: {
-  //           ...playerState,
-  //           position: playerState.position + delay.current,
-  //         },
-  //       },
-  //     })
-  //   }, 10)
-  // }, [playerState, set])
+    delay.current = new Date().getTime()
+    timerRef.current = setTimeout(() => {
+      delay.current = new Date().getTime() - delay.current
+      set((state) => ({
+        player: {
+          playerState: {
+            ...state.player.playerState,
+            position: state.player.playerState?.position + delay.current,
+          },
+        },
+      }))
+    }, 10)
+  }, [playerState, set])
 
   const progressBarStyles = useMemo(
     () => ({
@@ -74,7 +75,7 @@ export default function Player() {
       </div>
       <div className='playerCenter'>
         <div className='playerControls'>
-          {playerState?.is_playing ? 'Playing' : 'Paused'}
+          {playerState?.paused ? 'Paused' : 'Playing'}
         </div>
         <div className='progress'>
           <div className='progress__bar' style={progressBarStyles} />

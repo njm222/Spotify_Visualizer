@@ -85,11 +85,11 @@ const addPlayerListeners = (player) => {
       // send trackId as lastPlayed under /users/{uid} (should this be there for this release?)
       return
     }
-    useStore.setState({
+    useStore.setState((state) => ({
       player: {
-        ...useStore.getState().player,
+        ...state.player,
         playerState,
       },
-    })
+    }))
   })
 }
