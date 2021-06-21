@@ -9,6 +9,11 @@ body,
   overflow: hidden;
 }
 
+button {
+  background: unset;
+  border: unset;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -139,6 +144,15 @@ img {
 .playerContainer .playerControls {
   display: flex;
   justify-content: space-around;
+}
+
+.playerControls .iconButton {
+  border-radius: 100%;
+  transition: all 0.2s
+}
+
+.playerControls .iconButton.hover {
+  color: #FFF;
 }
 
 /** Progress **/

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import Image from 'next/image'
 import useStore from '@/helpers/store'
 import { sdkInit } from '@/spotifyClient'
+import PlayerControls from './PlayerControls'
 
 export default function Player() {
   const [set, playerState] = useStore((state) => [
@@ -75,7 +76,7 @@ export default function Player() {
       </div>
       <div className='playerCenter'>
         <div className='playerControls'>
-          {playerState?.paused ? 'Paused' : 'Playing'}
+          <PlayerControls />
         </div>
         <div className='progress'>
           <div className='progress__bar' style={progressBarStyles} />

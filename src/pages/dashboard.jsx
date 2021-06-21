@@ -18,7 +18,7 @@ const Playlists = dynamic(() => import('@/components/dom/Playlists'), {
   ssr: false,
 })
 
-const Player = dynamic(() => import('@/components/dom/Player'), {
+const Player = dynamic(() => import('@/components/dom/player/Player'), {
   ssr: false,
 })
 

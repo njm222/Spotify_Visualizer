@@ -17,8 +17,6 @@ export const getUserPlaylists = async (userId) => {
   return results
 }
 
-export const getPlayerTrack = () => {}
-
 export const getTrackAnalysis = async (trackId) => {
   const results = await spotifyClient.getAudioAnalysisForTrack(trackId)
   return results
@@ -76,9 +74,9 @@ const addPlayerListeners = (player) => {
       useStore.setState({
         player: {
           playerState,
-          lastPlayed: trackId,
           analysis,
           features,
+          lastPlayed: trackId,
         },
       })
       // send trackId and artistsId to firestore
@@ -92,4 +90,26 @@ const addPlayerListeners = (player) => {
       },
     }))
   })
+}
+
+/* -------- PLAYER CONTROLS -------- */
+
+export const playTrack = async (trackId = null) => {
+  const results = await spotifyClient.play(trackId)
+  return results
+}
+
+export const pausePlayer = async () => {
+  const results = await spotifyClient.pause()
+  return results
+}
+
+export const nextTrack = async () => {
+  const results = await spotifyClient.skipToNext()
+  return results
+}
+
+export const prevTrack = async () => {
+  const results = await spotifyClient.skipToPrevious()
+  return results
 }
