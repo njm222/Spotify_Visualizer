@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getUserPlaylists } from '@/spotifyClient'
+import Playlist from './Playlist'
 
 export default function Playlists() {
   const [myPlaylists, setMyPlaylists] = useState([])
@@ -16,17 +17,6 @@ export default function Playlists() {
       {myPlaylists.map((playlist) => (
         <Playlist key={playlist.id} {...playlist} />
       ))}
-    </div>
-  )
-}
-
-const Playlist = (props) => {
-  const [hovered, setHovered] = useState(false)
-  console.log(props)
-  return (
-    <div className='playlist'>
-      <img src={props.images[0]?.url}></img>
-      <h6>{props.name}</h6>
     </div>
   )
 }

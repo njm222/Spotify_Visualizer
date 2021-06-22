@@ -14,9 +14,12 @@ const VisualizerPreview = dynamic(
   }
 )
 
-const Playlists = dynamic(() => import('@/components/dom/Playlists'), {
-  ssr: false,
-})
+const Playlists = dynamic(
+  () => import('@/components/dom/playlists/Playlists'),
+  {
+    ssr: false,
+  }
+)
 
 const Player = dynamic(() => import('@/components/dom/player/Player'), {
   ssr: false,
