@@ -1,47 +1,52 @@
 export default class AudioAnalyser {
   constructor() {
     this.bassObject = {
-      bassDeviation: 0,
-      bassAv: 0,
-      bassArrCounter: 0,
-      bassEnergy: 0,
-      bassArr: [],
+      deviation: 0,
+      average: 0,
+      energy: 0,
+      counter: 0,
+      counterLimit: 32,
+      arr: [],
       lower: 0,
       upper: 4,
     }
     this.kickObject = {
-      kickDeviation: 0,
-      kickAv: 0,
-      kickEnergy: 0,
-      kickArrCounter: 0,
-      kickArr: [],
+      deviation: 0,
+      average: 0,
+      energy: 0,
+      counter: 0,
+      counterLimit: 64,
+      arr: [],
       lower: 1,
       upper: 3,
     }
     this.snareObject = {
-      snareDeviation: 0,
-      snareAv: 0,
-      snareEnergy: 0,
-      snareArrCounter: 0,
-      snareArr: [],
+      deviation: 0,
+      average: 0,
+      energy: 0,
+      counter: 0,
+      counterLimit: 64,
+      arr: [],
       lower: 2,
       upper: 4,
     }
     this.midsObject = {
-      midsDeviation: 0,
-      midsAv: 0,
-      midsEnergy: 0,
-      midsArrCounter: 0,
-      midsArr: [],
+      deviation: 0,
+      average: 0,
+      energy: 0,
+      counter: 0,
+      counterLimit: 64,
+      arr: [],
       lower: 4,
       upper: 18,
     }
     this.highsObject = {
-      highsDeviation: 0,
-      highsAv: 0,
-      highsEnergy: 0,
-      highsArrCounter: 0,
-      highsArr: [],
+      deviation: 0,
+      average: 0,
+      energy: 0,
+      counter: 0,
+      counterLimit: 64,
+      arr: [],
       lower: 32,
       upper: 128,
     }
@@ -66,10 +71,8 @@ export default class AudioAnalyser {
         .enumerateDevices()
         .then((devices) => {
           devices = devices.filter((d) => d.kind === 'audiooutput')
-          console.log(devices)
           const constraints = { audio: { deviceId: 'default' } }
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-            console.log(stream)
             // attach source to the mic
             this.source = this.context.createMediaStreamSource(stream)
             // connect source to the analyser
@@ -88,34 +91,56 @@ export default class AudioAnalyser {
     this.avFreq = 0
     this.rms = 0
     this.peak = 0
-    this.bassObject.bassAv = 0
-    this.bassObject.bassDeviation = 0
-    this.bassObject.bassEnergy = 0
-    this.kickObject.kickAv = 0
-    this.kickObject.kickDeviation = 0
-    this.kickObject.kickEnergy = 0
-    this.snareObject.snareAv = 0
-    this.snareObject.snareDeviation = 0
-    this.snareObject.snareEnergy = 0
-    this.midsObject.midsAv = 0
-    this.midsObject.midsDeviation = 0
-    this.midsObject.midsEnergy = 0
-    this.highsObject.highsAv = 0
-    this.highsObject.highsDeviation = 0
-    this.highsObject.highsEnergy = 0
+    this.bassObject.average = 0
+    this.bassObject.deviation = 0
+    this.bassObject.energy = 0
+    this.kickObject.average = 0
+    this.kickObject.deviation = 0
+    this.kickObject.energy = 0
+    this.snareObject.average = 0
+    this.snareObject.deviation = 0
+    this.snareObject.energy = 0
+    this.midsObject.average = 0
+    this.midsObject.deviation = 0
+    this.midsObject.energy = 0
+    this.highsObject.average = 0
+    this.highsObject.deviation = 0
+    this.highsObject.energy = 0
   }
 
   getData() {
     this.resetData()
     this.analyser.getByteFrequencyData(this.frequencyData)
-    this.getBassData()
-    this.getKickData()
-    this.getSnareData()
-    this.getMidsData()
-    this.getHighsData()
-    this.getDeviations()
+    this.getFreqSection(this.bassObject)
+    this.getFreqSection(this.kickObject)
+    this.getFreqSection(this.snareObject)
+    this.getFreqSection(this.midsObject)
+    this.getFreqSection(this.highsObject)
 
     this.getAvFreq()
+  }
+
+  getFreqSection(sectionObject) {
+    for (let i = sectionObject.lower; i < sectionObject.upper; i++) {
+      sectionObject.energy += this.frequencyData[i]
+    }
+    sectionObject.energy =
+      sectionObject.energy / (sectionObject.upper - sectionObject.lower)
+    sectionObject.arr[sectionObject.counter++] = sectionObject.energy
+
+    for (let i = 0; i < sectionObject.arr.length; i++) {
+      sectionObject.average += sectionObject.arr[i]
+      sectionObject.deviation += Math.pow(sectionObject.arr[i], 2)
+    }
+
+    sectionObject.average = sectionObject.average / sectionObject.arr.length
+    sectionObject.deviation =
+      Math.sqrt(sectionObject.deviation / sectionObject.arr.length) -
+      sectionObject.average * sectionObject.average
+
+    if (sectionObject.counter >= sectionObject.counterLimit) {
+      sectionObject.counter = 0
+    }
   }
 
   getAvFreq() {
@@ -128,134 +153,5 @@ export default class AudioAnalyser {
     }
     this.avFreq = this.avFreq / this.bufferLength
     this.rms = Math.sqrt(this.rms / this.bufferLength)
-  }
-
-  getBassData() {
-    for (let i = this.bassObject.lower; i < this.bassObject.upper; i++) {
-      this.bassObject.bassEnergy += this.frequencyData[i]
-    }
-    this.bassObject.bassEnergy =
-      this.bassObject.bassEnergy /
-      (this.bassObject.upper - this.bassObject.lower)
-    this.bassObject.bassArr[this.bassObject.bassArrCounter++] =
-      this.bassObject.bassEnergy
-    if (this.bassObject.bassArrCounter >= 32) {
-      this.bassObject.bassArrCounter = 0
-    }
-  }
-
-  getKickData() {
-    for (let i = this.kickObject.lower; i < this.kickObject.upper; i++) {
-      this.kickObject.kickEnergy += this.frequencyData[i]
-    }
-    this.kickObject.kickEnergy =
-      this.kickObject.kickEnergy /
-      (this.kickObject.upper - this.kickObject.lower)
-    this.kickObject.kickArr[this.kickObject.kickArrCounter++] =
-      this.kickObject.kickEnergy
-    if (this.kickObject.kickArrCounter >= 64) {
-      this.kickObject.kickArrCounter = 0
-    }
-  }
-
-  getSnareData() {
-    for (let i = this.snareObject.lower; i < this.snareObject.upper; i++) {
-      this.snareObject.snareEnergy += this.frequencyData[i]
-    }
-    this.snareObject.snareEnergy =
-      this.snareObject.snareEnergy /
-      (this.snareObject.upper - this.snareObject.lower)
-    this.snareObject.snareArr[this.snareObject.snareArrCounter++] =
-      this.snareObject.snareEnergy
-    if (this.snareObject.snareArrCounter >= 64) {
-      this.snareObject.snareArrCounter = 0
-    }
-  }
-
-  getMidsData() {
-    for (let i = this.midsObject.lower; i < this.midsObject.upper; i++) {
-      this.midsObject.midsEnergy += this.frequencyData[i]
-    }
-    this.midsObject.midsEnergy =
-      this.midsObject.midsEnergy /
-      (this.midsObject.upper - this.midsObject.lower)
-    this.midsObject.midsArr[this.midsObject.midsArrCounter++] =
-      this.midsObject.midsEnergy
-    if (this.midsObject.midsArrCounter >= 64) {
-      this.midsObject.midsArrCounter = 0
-    }
-  }
-
-  getHighsData() {
-    for (let i = this.highsObject.lower; i < this.highsObject.upper; i++) {
-      this.highsObject.highsEnergy += this.frequencyData[i]
-    }
-    this.highsObject.highsEnergy =
-      this.highsObject.highsEnergy /
-      (this.highsObject.upper - this.highsObject.lower)
-    this.highsObject.highsArr[this.highsObject.highsArrCounter++] =
-      this.highsObject.highsEnergy
-    if (this.highsObject.highsArrCounter >= 64) {
-      this.highsObject.highsArrCounter = 0
-    }
-  }
-
-  getDeviations() {
-    for (let i = 0; i < this.bassObject.bassArr.length; i++) {
-      this.bassObject.bassAv += this.bassObject.bassArr[i]
-      this.bassObject.bassDeviation +=
-        this.bassObject.bassArr[i] * this.bassObject.bassArr[i]
-
-      this.kickObject.kickAv += this.kickObject.kickArr[i]
-      this.kickObject.kickDeviation +=
-        this.kickObject.kickArr[i] * this.kickObject.kickArr[i]
-
-      this.snareObject.snareAv += this.snareObject.snareArr[i]
-      this.snareObject.snareDeviation +=
-        this.snareObject.snareArr[i] * this.snareObject.snareArr[i]
-
-      this.midsObject.midsAv += this.midsObject.midsArr[i]
-      this.midsObject.midsDeviation +=
-        this.midsObject.midsArr[i] * this.midsObject.midsArr[i]
-
-      this.highsObject.highsAv += this.highsObject.highsArr[i]
-      this.highsObject.highsDeviation +=
-        this.highsObject.highsArr[i] * this.highsObject.highsArr[i]
-    }
-
-    this.bassObject.bassAv =
-      this.bassObject.bassAv / this.bassObject.bassArr.length
-    this.bassObject.bassDeviation = Math.sqrt(
-      this.bassObject.bassDeviation / this.bassObject.bassArr.length -
-        this.bassObject.bassAv * this.bassObject.bassAv
-    )
-
-    this.kickObject.kickAv =
-      this.kickObject.kickAv / this.kickObject.kickArr.length
-    this.kickObject.kickDeviation = Math.sqrt(
-      this.kickObject.kickDeviation / this.kickObject.kickArr.length -
-        this.kickObject.kickAv * this.kickObject.kickAv
-    )
-
-    this.snareObject.snareAv =
-      this.snareObject.snareAv / this.snareObject.snareArr.length
-    this.snareObject.snareDeviation = Math.sqrt(
-      this.snareObject.snareDeviation / this.snareObject.snareArr.length -
-        this.snareObject.snareAv * this.snareObject.snareAv
-    )
-
-    this.midsObject.midsAv =
-      this.midsObject.midsAv / this.midsObject.midsArr.length
-    this.midsObject.midsDeviation = Math.sqrt(
-      this.midsObject.midsDeviation / this.midsObject.midsArr.length -
-        this.midsObject.midsAv * this.midsObject.midsAv
-    )
-
-    this.highsObject.highsAv =
-      this.highsObject.highsAv / this.highsObject.highsArr.length
-    this.highsObject.highsDeviation = Math.sqrt(
-      this.highsObject.highsDeviation / this.highsObject.highsArr.length -
-        this.highsObject.highsAv * this.highsObject.highsAv
-    )
   }
 }
