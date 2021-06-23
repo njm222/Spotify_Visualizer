@@ -9,8 +9,10 @@ const Mode0 = () => {
   const material = useRef()
 
   useFrame((state, delta) => {
-    material.current.color = new Color(getColour())
+    material.current.color.lerp(new Color(getColour()), delta * 10)
+    // material.current.color = new Color(getColour())
   })
+
   return (
     <>
       <mesh rotation={[Math.PI / 3, Math.PI / 3, 0]}>

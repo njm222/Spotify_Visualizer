@@ -11,7 +11,7 @@ const LCanvas = ({ children }) => {
       style={{
         position: 'absolute',
         top: 0,
-        background: '#000',
+        background: '#FFF',
       }}
       onCreated={(state) => state.events.connect(dom.current)}
     >

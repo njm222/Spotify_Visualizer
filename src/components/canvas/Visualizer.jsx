@@ -9,10 +9,10 @@ import Mode2 from './modes/Mode2'
 function Lights() {
   return (
     <>
-      <color attach='background' args={['#f0f0f0']} />
+      <color attach='background' args={['#000']} />
       <ambientLight intensity={1} />
       <pointLight position={[20, 30, 10]} />
-      <pointLight position={[-10, -10, -10]} color='blue' />
+      <pointLight position={[-10, -10, -10]} />
     </>
   )
 }
@@ -24,7 +24,7 @@ const Visualizer = () => {
     set({audioAnalyzer: new AudioAnalyzer()})
   }, [])
 
-  useFrame((state) => {
+  useFrame(() => {
     audioAnalyzer?.updateData()
     spotifyAnalyzer?.updateData()
   })
