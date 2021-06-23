@@ -1,6 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
+import useStore from '@/helpers/store'
 import AudioAnalyzer from '@/helpers/AudioAnalyzer'
+import Mode0 from './modes/Mode0'
 import Mode1 from './modes/Mode1'
 import Mode2 from './modes/Mode2'
 
@@ -16,31 +18,34 @@ function Lights() {
 }
 
 const Visualizer = () => {
-  const analyzer = useRef()
+  const [set, modeKey, audioAnalyzer, spotifyAnalyzer] = useStore((state) => [state.set, state.modeKey, state.audioAnalyzer, state.spotifyAnalyzer])
 
   useEffect(() => {
-    analyzer.current = new AudioAnalyzer()
+    set({audioAnalyzer: new AudioAnalyzer()})
   }, [])
 
   useFrame((state) => {
-    analyzer.current.getData()
+    audioAnalyzer?.updateData()
+    spotifyAnalyzer?.updateData()
   })
 
   const renderMode = (mode) => {
     switch (mode) {
+      case 0:
+        return <Mode0 />
       case 1:
         return <Mode1 />
       case 2:
         return <Mode2 />
       default:
-        return <Mode1 />
+        return <Mode0 />
     }
   }
 
   return (
     <>
       <Lights />
-      {renderMode(1)}
+      {renderMode(modeKey)}
     </>
   )
 }

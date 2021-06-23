@@ -108,7 +108,7 @@ export default class AudioAnalyser {
     this.highsObject.energy = 0
   }
 
-  getData() {
+  updateData() {
     this.resetData()
     this.analyser.getByteFrequencyData(this.frequencyData)
     this.getFreqSection(this.bassObject)
