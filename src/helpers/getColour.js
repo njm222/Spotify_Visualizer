@@ -14,9 +14,9 @@ const getColour = () => {
                 )
         case 1:
             return hslToHex(
+                Math.abs(spotifyAnalyzer.timbre[0] / 10),
+                Math.abs(spotifyAnalyzer.timbre[2]),
                 Math.abs(spotifyAnalyzer.timbre[1]),
-                audioAnalyzer.midsObject.average,
-                audioAnalyzer.bassObject.average,
                 )
         default:
             return hslToHex(

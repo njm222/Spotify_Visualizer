@@ -41,27 +41,14 @@ export default class SpotifyAnalyzer {
     this.sections = data.sections
   }
 
-  updateObj (data, dataCounter, position, isSegment = false) {
-    const segment = data[dataCounter]
-    if (!segment) { return {} }
-
-    const dataEnd = segment.start + segment.duration
-
-    if (position >= dataEnd) {
-      dataCounter += 1
-      if (isSegment) {
-        this.segmentCounter += 1
-        this.timbre = data[dataCounter].timbre
-        this.pitches = data[dataCounter].pitches
-      }
-    }
-    return data[dataCounter]
-  }
-
-  incrementCounter (counter, position) {
-    return (position >= counter)
-    ? ++counter
-    : counter
+  updateData() {
+    const position = useStore.getState().player.playerState?.position / 1000
+    if (!position) { return }
+    this.updateSegment(position)
+    this.updateTatum(position)
+    this.updateBeat(position)
+    this.updateBar(position)
+    this.updateSection(position)
   }
 
   updateSegment (position) {
@@ -82,7 +69,7 @@ export default class SpotifyAnalyzer {
     const data = this.tatums[this.tatumCounter]
     if (!data) { return }
 
-    const end = tatum.start + tatum.duration
+    const end = data.start + data.duration
 
     if (position >= end) {
       this.tatumCounter += 1
@@ -124,15 +111,5 @@ export default class SpotifyAnalyzer {
       this.beatCounter += 1
       this.section = this.sections[this.sectionCounter]
     }
-  }
-
-  updateData() {
-    const position = useStore.getState().player.playerState?.position / 1000
-    if (!position) { return }
-    updateSegment(position)
-    updateTatum(position)
-    updateBeat(position)
-    updateBar(position)
-    updateSection(position)
   }
 }
