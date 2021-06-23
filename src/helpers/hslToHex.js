@@ -24,7 +24,7 @@ const hslToHex = (h, s, l) => {
     const hex = Math.round(x * 255).toString(16)
     return hex.length === 1 ? '0' + hex : hex
   }
-  return `0x${toHex(r)}${toHex(g)}${toHex(b)}`
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`
 }
 
 export default hslToHex
