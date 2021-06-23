@@ -1,7 +1,7 @@
 const hslToHex = (h, s, l) => {
-  h /= 360
-  s /= 255
-  l /= 255
+  h = (h % 360) / 360
+  s = (s % 255) / 255
+  l = (l % 255) / 255
   let r, g, b
   if (s === 0) {
     r = g = b = l // achromatic
