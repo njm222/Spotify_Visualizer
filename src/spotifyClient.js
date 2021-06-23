@@ -71,11 +71,11 @@ const addPlayerListeners = (player) => {
       const analysis = await getTrackAnalysis(trackId)
       const features = await getTrackFeatures(trackId)
 
+      useStore.getState().spotifyAnalyzer.setData(analysis)
       useStore.setState({
+        spotifyFeatures: features,
         player: {
           playerState,
-          analysis,
-          features,
           lastPlayed: trackId,
         },
       })
