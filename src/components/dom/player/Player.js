@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 import Image from 'next/image'
 import useStore from '@/helpers/store'
 import { sdkInit } from '@/spotifyClient'
 import PlayerControls from './PlayerControls'
 
-export default function Player() {
+const Player = () => {
   const [set, playerState] = useStore((state) => [
     state.set,
     state.player.playerState,
@@ -86,3 +86,5 @@ export default function Player() {
     </div>
   ) : null
 }
+
+export default memo(Player)

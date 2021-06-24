@@ -8,15 +8,15 @@ const getColour = () => {
     switch(useStore.getState().colourKey) {
         case 0:
             return hslToHex(
-                audioAnalyzer.snareObject.energy * 10,
-                audioAnalyzer.kickObject.average * 10,
-                audioAnalyzer.kickObject.energy * 10,
+                audioAnalyzer.snareObject.energy * 5,
+                audioAnalyzer.kickObject.average,
+                audioAnalyzer.midsObject.energy,
             )
         case 1:
             return hslToHex(
-                Math.abs(spotifyAnalyzer.timbre[2] * 10),
-                Math.abs(spotifyAnalyzer.timbre[0] * 10),
-                Math.abs(spotifyAnalyzer.timbre[1] * 10),
+                Math.abs(spotifyAnalyzer.timbre[2] * 2),
+                audioAnalyzer.bassObject.energy,
+                Math.abs(spotifyAnalyzer.timbre[0]),
             )
         case 3:
             return hslToHex(
@@ -26,9 +26,9 @@ const getColour = () => {
             )
         default:
             return hslToHex(
-                audioAnalyzer.midsObject.average,
-                audioAnalyzer.snareObject.average,
-                audioAnalyzer.kickObject.average
+                audioAnalyzer.highsObject.energy * 10,
+                audioAnalyzer.snareObject.average * 2,
+                audioAnalyzer.kickObject.average * 2,
             )
     }
 }

@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { memo, useLayoutEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import useStore from '@/helpers/store'
 import AudioAnalyzer from '@/helpers/AudioAnalyzer'
+import useStore from '@/helpers/store'
 import Mode0 from './modes/Mode0'
 import Mode1 from './modes/Mode1'
 import Mode2 from './modes/Mode2'
@@ -18,19 +18,20 @@ function Lights() {
 }
 
 const Visualizer = () => {
-  const [set, modeKey, audioAnalyzer, spotifyAnalyzer] = useStore((state) => [state.set, state.modeKey, state.audioAnalyzer, state.spotifyAnalyzer])
+  const set = useStore((state) => state.set)
+  const modeKey = useStore((state) => state.modeKey)
 
-  useEffect(() => {
-    set({audioAnalyzer: new AudioAnalyzer()})
+  useLayoutEffect(() => {
+    setTimeout(() => set({audioAnalyzer: new AudioAnalyzer()}), 0)
   }, [])
 
   useFrame(() => {
-    audioAnalyzer?.updateData()
-    spotifyAnalyzer?.updateData()
+    useStore.getState().audioAnalyzer?.updateData()
+    useStore.getState().spotifyAnalyzer?.updateData()
   })
 
-  const renderMode = (mode) => {
-    switch (mode) {
+  const Mode = useMemo(() => {
+    switch (modeKey) {
       case 0:
         return <Mode0 />
       case 1:
@@ -40,14 +41,14 @@ const Visualizer = () => {
       default:
         return <Mode0 />
     }
-  }
+  }, [modeKey])
 
   return (
     <>
       <Lights />
-      {renderMode(modeKey)}
+      {Mode}
     </>
   )
 }
 
-export default Visualizer
+export default memo(Visualizer)

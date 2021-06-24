@@ -4,6 +4,8 @@ import Portal from './Portal'
 import Visualizer from './Visualizer'
 
 const VisualizerPreview = () => {
+  console.log('visualizerPreview')
+
   return (
     <>
       <OrbitControls />

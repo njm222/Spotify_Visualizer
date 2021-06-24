@@ -1,14 +1,14 @@
 import * as THREE from 'three'
-import { useState, useRef } from 'react'
+import { memo, useState, useRef } from 'react'
 import { useFrame, createPortal } from '@react-three/fiber'
 import { useFBO, PerspectiveCamera } from '@react-three/drei'
 import useStore from '@/helpers/store'
 
 function Portal({ children, ...props }) {
-  const [set, isVisualizer] = useStore((state) => [
-    state.set,
-    state.isVisualizer,
-  ])
+  console.log('portal')
+  const set = useStore((state) => state.set)
+  const isVisualizer = useStore((state) => state.isVisualizer)
+
   const time = useRef(0)
   const mesh = useRef()
   const cam = useRef()
@@ -23,8 +23,8 @@ function Portal({ children, ...props }) {
       return
     }
     if (state.camera.position.distanceTo(mesh.current.position) < 2) {
-      console.log('switching cams')
       if (!portalCam) {
+        console.log('switching cams')
         setPortalCam(true)
       }
     } else if (state.camera.position.distanceTo(mesh.current.position) < 5) {
@@ -92,4 +92,4 @@ function Portal({ children, ...props }) {
   )
 }
 
-export default Portal
+export default memo(Portal)

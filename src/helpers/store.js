@@ -10,7 +10,7 @@ const useStore = create((set) => {
     accessToken: null,
     refreshToken: null,
     isVisualizer: false,
-    colourKey: 1,
+    colourKey: 0,
     modeKey: 0,
     audioAnalyzer: null,
     spotifyAnalyzer: new SpotifyAnalyzer(),
