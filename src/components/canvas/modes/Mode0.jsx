@@ -16,13 +16,13 @@ const Terrain = () => {
   const size = [10, 10]
   const res = [512, 512]
 
-  // Set the noise variables TODO: come from props
-  const nTimeStretch = 4
-
+  const sectionTempo = useStore((state) => state.spotifyAnalyzer.section.tempo)
   // Animate the z value of each vertex in the terrain grid using a noise function
   useFrame((state, delta) => {
-    const nAmplitude = Math.max(useStore.getState().audioAnalyzer?.avFreq / 100, 0.1)
-    const nScale = Math.max(useStore.getState().audioAnalyzer?.midsObject.energy * (useStore.getState().spotifyFeatures?.danceability / 5), 64)
+    // Set the variables for simplex
+    const nAmplitude = Math.max(useStore.getState().audioAnalyzer?.avFreq / 150, 0.1)
+    const nScale = 2 - useStore.getState().spotifyFeatures?.energy - useStore.getState().spotifyFeatures?.danceability 
+    
     // Get a reference of the terrain grid's geometry
     const terrainGeometry = terrainGeometryRef.current
 
@@ -30,12 +30,11 @@ const Terrain = () => {
     const { position } = terrainGeometry.attributes
 
     // Get the current time
-    const time = state.clock.getElapsedTime() / nTimeStretch
-    const time2 = state.clock.getElapsedTime() + nScale
+    const time = state.clock.getElapsedTime() * (sectionTempo / 500) + nScale
 
     // For each vertex set the position on the z-axis based on the noise function
     for (let i = 0; i < position.count; i++) {
-      const z = simplexNoise.noise3D(position.getX(i), position.getY(i), time, time2)
+      const z = simplexNoise.noise3D(position.getX(i) / nScale, position.getY(i) / nScale, time)
       position.setZ(i, z * nAmplitude)
     }
 

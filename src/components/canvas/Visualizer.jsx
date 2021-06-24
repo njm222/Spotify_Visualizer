@@ -22,7 +22,7 @@ const Visualizer = () => {
   const modeKey = useStore((state) => state.modeKey)
 
   useLayoutEffect(() => {
-    setTimeout(() => set({audioAnalyzer: new AudioAnalyzer()}), 0)
+    set({audioAnalyzer: new AudioAnalyzer()})
   }, [])
 
   useFrame(() => {
