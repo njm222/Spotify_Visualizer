@@ -1,4 +1,4 @@
-import { memo, useLayoutEffect, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import AudioAnalyzer from '@/helpers/AudioAnalyzer'
 import useStore from '@/helpers/store'
@@ -21,8 +21,8 @@ const Visualizer = () => {
   const set = useStore((state) => state.set)
   const modeKey = useStore((state) => state.modeKey)
 
-  useLayoutEffect(() => {
-    set({audioAnalyzer: new AudioAnalyzer()})
+  useEffect(() => {
+    set({ audioAnalyzer: new AudioAnalyzer() })
   }, [])
 
   useFrame(() => {

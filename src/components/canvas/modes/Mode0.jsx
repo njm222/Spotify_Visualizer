@@ -16,7 +16,7 @@ const Terrain = () => {
   const size = [10, 10]
   const res = [512, 512]
 
-  const sectionTempo = useStore((state) => state.spotifyAnalyzer.section.tempo)
+  const sectionTempo = useStore((state) => state.spotifyAnalyzer?.section.tempo)
   // Animate the z value of each vertex in the terrain grid using a noise function
   useFrame((state, delta) => {
     // Set the variables for simplex
@@ -45,6 +45,9 @@ const Terrain = () => {
 
     // Update the material colour
     terrainMaterialRef.current.color.lerp(new THREE.Color(getColour()), delta * 2)
+
+    // Switch wireframe on every bar
+    terrainMaterialRef.current.wireframe = useStore.getState().spotifyAnalyzer?.beatCounter % 2 === 0
   })
 
   return (
